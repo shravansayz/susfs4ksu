@@ -7,6 +7,7 @@
 #include <linux/namei.h>
 #include <linux/list.h>
 #include <linux/init_task.h>
+#include <linux/limits.h>
 #include <linux/spinlock.h>
 #include <linux/stat.h>
 #include <linux/uaccess.h>
@@ -20,7 +21,6 @@ LIST_HEAD(LH_SUS_MOUNT);
 LIST_HEAD(LH_MAPS_SPOOFER);
 LIST_HEAD(LH_SUS_PROC_FD_LINK);
 LIST_HEAD(LH_TRY_UMOUNT_PATH);
-
 LIST_HEAD(LH_MOUNT_ID_RECORDER);
 
 struct st_susfs_uname my_uname;
@@ -33,8 +33,8 @@ bool is_log_enable = true;
 #define SUSFS_LOGI(fmt, ...) if (is_log_enable) pr_info("susfs: " fmt, ##__VA_ARGS__)
 #define SUSFS_LOGE(fmt, ...) if (is_log_enable) pr_err("susfs: " fmt, ##__VA_ARGS__)
 #else
-#define SUSFS_LOGI(fmt, ...) 
-#define SUSFS_LOGE(fmt, ...) 
+#define SUSFS_LOGI(fmt, ...)
+#define SUSFS_LOGE(fmt, ...)
 #endif
 
 int susfs_add_sus_path(struct st_susfs_sus_path* __user user_info) {
@@ -140,10 +140,10 @@ int susfs_add_sus_kstat(struct st_susfs_sus_kstat* __user user_info) {
 
 	memcpy(&new_list->info, &info, sizeof(struct st_susfs_sus_kstat));
 	/* Seems the dev number issue is finally solved, the userspace stat we see is already a encoded dev
-	 * which is set by new_encode_dev() / huge_encode_dev() function for 64bit system and 
+	 * which is set by new_encode_dev() / huge_encode_dev() function for 64bit system and
 	 * old_encode_dev() for 32bit only system, that's why we need to decode it in kernel as well,
 	 * and different kernel may have different function to encode the dev number, be cautious!
-	 * Also check your encode_dev() macro in fs/stat.c to determine which one to use 
+	 * Also check your encode_dev() macro in fs/stat.c to determine which one to use
 	 */
 #if defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_COMPAT_STAT64)
 #ifdef CONFIG_MIPS
@@ -191,7 +191,7 @@ int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 	struct st_susfs_sus_maps_list *cursor, *temp;
 	struct st_susfs_sus_maps_list *new_list = NULL;
 	struct st_susfs_sus_maps info;
-	
+
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_maps))) {
 		SUSFS_LOGE("failed copying from userspace\n");
 		return 1;
@@ -224,7 +224,7 @@ int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 			} else if (cursor->info.compare_mode == info.compare_mode && info.compare_mode == 2) {
 				if (cursor->info.target_ino == info.target_ino &&
 					cursor->info.is_isolated_entry == info.is_isolated_entry &&
-				    cursor->info.target_pgoff == info.target_pgoff &&
+					cursor->info.target_pgoff == info.target_pgoff &&
 					cursor->info.target_prot == info.target_prot) {
 					SUSFS_LOGE("is_statically: '%d', compare_mode: '%d', target_ino: '%lu', is_isolated_entry: '%d', target_pgoff: '0x%x', target_prot: '0x%x', is already created in LH_MAPS_SPOOFER\n",
 					info.is_statically, info.compare_mode, info.target_ino,
@@ -234,7 +234,7 @@ int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 			} else if (cursor->info.compare_mode == info.compare_mode && info.compare_mode == 3) {
 				if (info.target_ino == 0 &&
 					cursor->info.prev_target_ino == info.prev_target_ino &&
-				    cursor->info.next_target_ino == info.next_target_ino) {
+					cursor->info.next_target_ino == info.next_target_ino) {
 					SUSFS_LOGE("is_statically: '%d', compare_mode: '%d', target_ino: '%lu', prev_target_ino: '%lu', next_target_ino: '%lu', is already created in LH_MAPS_SPOOFER\n",
 					info.is_statically, info.compare_mode, info.target_ino,
 					info.prev_target_ino, info.next_target_ino);
@@ -243,9 +243,9 @@ int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 			} else if (cursor->info.compare_mode == info.compare_mode && info.compare_mode == 4) {
 				if (cursor->info.is_file == info.is_file &&
 					cursor->info.target_dev == info.target_dev &&
-				    cursor->info.target_pgoff == info.target_pgoff &&
-				    cursor->info.target_prot == info.target_prot &&
-				    cursor->info.target_addr_size == info.target_addr_size) {
+					cursor->info.target_pgoff == info.target_pgoff &&
+					cursor->info.target_prot == info.target_prot &&
+					cursor->info.target_addr_size == info.target_addr_size) {
 					SUSFS_LOGE("is_statically: '%d', compare_mode: '%d', is_file: '%d', target_dev: '0x%x', target_pgoff: '0x%x', target_prot: '0x%x', target_addr_size: '0x%x', is already created in LH_MAPS_SPOOFER\n",
 					info.is_statically, info.compare_mode, info.is_file,
 					info.target_dev, info.target_pgoff, info.target_prot,
@@ -398,7 +398,7 @@ int susfs_set_uname(struct st_susfs_uname* __user user_info) {
 	return 0;
 }
 
-int susfs_sus_path_by_path(struct path* file, int* errno_to_be_changed, int syscall_family) {
+int susfs_sus_path_by_path(const struct path* file, int* errno_to_be_changed, int syscall_family) {
 	int res = 0;
 	int status = 0;
 	char* path = NULL;
@@ -407,27 +407,25 @@ int susfs_sus_path_by_path(struct path* file, int* errno_to_be_changed, int sysc
 	struct st_susfs_sus_path_list *cursor, *temp;
 
 	if (!uid_matches_suspicious_path() || file == NULL) {
-		return 0;
+		return status; // status == 0
 	}
 
-	path = kmalloc(SUSFS_DPATH_BUF_LEN, GFP_KERNEL);
+	path = kmalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
 		SUSFS_LOGE("No enough memory\n");
-		return 0;
+		return status; // status == 0
 	}
 
-	ptr = d_path(file, path, SUSFS_DPATH_BUF_LEN);
+	ptr = d_path(file, path, PATH_MAX);
 	if (IS_ERR(ptr)) {
 		SUSFS_LOGE("d_path() failed\n");
-		status = 0;
 		goto out;
 	}
 
 	end = mangle_path(path, ptr, " \t\n\\");
 
 	if (!end) {
-		status = 0;
-		goto out;
+		goto out; // status == 0
 	}
 
 	res = end - path;
@@ -455,11 +453,11 @@ int susfs_sus_path_by_filename(struct filename* name, int* errno_to_be_changed, 
 	struct path path;
 
 	if (IS_ERR(name)) {
-		return 0;
+		return status; // status == 0
 	}
 
 	if (!uid_matches_suspicious_path() || name == NULL) {
-		return 0;
+		return status; // status == 0
 	}
 
 	ret = kern_path(name->name, LOOKUP_FOLLOW, &path);
@@ -499,24 +497,22 @@ int susfs_sus_mount(struct vfsmount* mnt, struct path* root) {
 
 	//if (!uid_matches_suspicious_mount()) return status;
 
-	path = kmalloc(SUSFS_DPATH_BUF_LEN, GFP_KERNEL);
+	path = kmalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
 		SUSFS_LOGE("No enough memory\n");
-		return 0;
+		return status; // status == 0
 	}
 
-	ptr = __d_path(&mnt_path, root, path, SUSFS_DPATH_BUF_LEN);
+	ptr = d_path(&mnt_path, path, PATH_MAX);
 	if (IS_ERR(ptr)) {
 		SUSFS_LOGE("__d_path() failed\n");
-		status = 0;
-		goto out;
+		goto out; // status == 0
 	}
 
 	end = mangle_path(path, ptr, " \t\n\\");
 
 	if (!end) {
-		status = 0;
-		goto out;
+		goto out; // status == 0
 	}
 
 	res = end - path;
@@ -536,7 +532,11 @@ out:
 	return status;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0)
+void susfs_sus_kstat(unsigned long ino, struct stat64* out_stat) {
+#else
 void susfs_sus_kstat(unsigned long ino, struct stat* out_stat) {
+#endif
 	struct st_susfs_sus_kstat_list *cursor, *temp;
 
 	if (!uid_matches_suspicious_kstat()) return;
@@ -615,7 +615,7 @@ int susfs_sus_maps(unsigned long target_ino, unsigned long target_address_size, 
 							if (vma && vma->vm_next && vma->vm_next->vm_file) {
 								tmp_inode = file_inode(vma->vm_next->vm_file);
 								if (tmp_inode->i_ino == cursor->info.target_ino ||
-								    tmp_inode->i_ino == (cursor->info.target_ino+1) ||
+									tmp_inode->i_ino == (cursor->info.target_ino+1) ||
 									tmp_inode->i_ino == (cursor->info.target_ino-1)) {
 									goto do_spoof;
 								}
@@ -623,7 +623,7 @@ int susfs_sus_maps(unsigned long target_ino, unsigned long target_address_size, 
 							if (vma && vma->vm_prev && vma->vm_prev->vm_file) {
 								tmp_inode = file_inode(vma->vm_prev->vm_file);
 								if (tmp_inode->i_ino == cursor->info.target_ino ||
-								    tmp_inode->i_ino == (cursor->info.target_ino+1) ||
+									tmp_inode->i_ino == (cursor->info.target_ino+1) ||
 									tmp_inode->i_ino == (cursor->info.target_ino-1)) {
 									goto do_spoof;
 								}
@@ -673,7 +673,7 @@ int susfs_sus_maps(unsigned long target_ino, unsigned long target_address_size, 
 							tmp_inode_prev = file_inode(vma->vm_prev->vm_file);
 							tmp_inode_next = file_inode(vma->vm_next->vm_file);
 							if (tmp_inode_prev->i_ino == cursor->info.prev_target_ino &&
-							    tmp_inode_next->i_ino == cursor->info.next_target_ino) {
+								tmp_inode_next->i_ino == cursor->info.next_target_ino) {
 								goto do_spoof;
 							}
 						}
@@ -795,7 +795,7 @@ static void try_umount(const char *mnt, bool check_mnt, int flags) {
 	if (check_mnt && !should_umount(&path)) {
 		return;
 	}
-	
+
 	umount_mnt(&path, flags);
 }
 
@@ -993,7 +993,7 @@ void susfs_add_mnt_id_recorder(void) {
 	struct st_susfs_sus_mount_list *sus_mount_cursor;
 
 	struct mnt_namespace *ns = current->nsproxy->mnt_ns;
-	struct mount *mnt; 
+	struct mount *mnt;
 
 	struct path mnt_path;
 	char *path = NULL;
@@ -1010,7 +1010,7 @@ void susfs_add_mnt_id_recorder(void) {
 		return;
 	}
 
-	path = kmalloc(SUSFS_DPATH_BUF_LEN, GFP_KERNEL);
+	path = kmalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
 		SUSFS_LOGE("No enough memory\n");
 		kfree(new_list);
@@ -1022,7 +1022,7 @@ void susfs_add_mnt_id_recorder(void) {
 	list_for_each_entry(mnt, &ns->list, mnt_list) {
 		mnt_path.dentry = mnt->mnt.mnt_root;
 		mnt_path.mnt = &mnt->mnt;
-		p_path = d_path(&mnt_path, path, SUSFS_DPATH_BUF_LEN);
+		p_path = d_path(&mnt_path, path, PATH_MAX);
 		if (IS_ERR(p_path)) {
 			SUSFS_LOGE("d_path() failed\n");
 			continue;
