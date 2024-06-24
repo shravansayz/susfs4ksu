@@ -994,15 +994,17 @@ void susfs_add_mnt_id_recorder(void) {
 	int cur_pid = current->pid;
 	int count = 0;
 
+	SUSFS_LOGI("Starting susfs_add_mnt_id_recorder for pid: %d\n", cur_pid);
+
 	new_list = kzalloc(sizeof(struct st_susfs_mnt_id_recorder_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("No enough memory\n");
+		SUSFS_LOGE("Not enough memory for new_list\n");
 		return;
 	}
 
 	path = kmalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
-		SUSFS_LOGE("No enough memory\n");
+		SUSFS_LOGE("Not enough memory for path\n");
 		kfree(new_list);
 		return;
 	}
@@ -1010,6 +1012,11 @@ void susfs_add_mnt_id_recorder(void) {
 	new_list->info.pid = cur_pid;
 
 	list_for_each_entry(mnt, &ns->list, mnt_list) {
+		if (!mnt) {
+			SUSFS_LOGE("mnt is NULL\n");
+			continue;
+		}
+
 		mnt_path.dentry = mnt->mnt.mnt_root;
 		mnt_path.mnt = &mnt->mnt;
 		p_path = d_path(&mnt_path, path, PATH_MAX);
@@ -1019,6 +1026,7 @@ void susfs_add_mnt_id_recorder(void) {
 		}
 		end = mangle_path(path, p_path, " \t\n\\");
 		if (!end) {
+			SUSFS_LOGE("mangle_path() failed\n");
 			continue;
 		}
 		res = end - path;
@@ -1036,6 +1044,7 @@ void susfs_add_mnt_id_recorder(void) {
 	kfree(path);
 	if (new_list->info.count == 0) {
 		kfree(new_list);
+		SUSFS_LOGI("No matching mounts found for pid: %d\n", cur_pid);
 		return;
 	}
 
@@ -1051,27 +1060,35 @@ int susfs_get_fake_mnt_id(int mnt_id) {
 	int cur_pid = current->pid;
 	int i;
 
+	SUSFS_LOGI("Starting susfs_get_fake_mnt_id for pid: %d, mnt_id: %d\n", cur_pid, mnt_id);
+
 	list_for_each_entry(cursor, &LH_MOUNT_ID_RECORDER, list) {
 		if (cursor->info.pid == cur_pid) {
+			SUSFS_LOGI("Found matching pid: %d in LH_MOUNT_ID_RECORDER\n", cur_pid);
 			for (i = 0; i < cursor->info.count; i++) {
 				// if comparing with first target_mnt_id and mnt_id is before any target_mnt_id
 				if (i == 0 && mnt_id < cursor->info.target_mnt_id[i]) {
+					SUSFS_LOGI("mnt_id: %d is before first target_mnt_id: %d\n", mnt_id, cursor->info.target_mnt_id[i]);
 					return mnt_id;
 				}
 				// if comparing with last target_mnt_id and mnt_id is after the last target_mnt_id
 				if (i+1 == cursor->info.count && cursor->info.target_mnt_id[i] < mnt_id) {
+					SUSFS_LOGI("mnt_id: %d is after last target_mnt_id: %d\n", mnt_id, cursor->info.target_mnt_id[i]);
 					return mnt_id - cursor->info.count;
 				}
 				// else comparing the target_mnt_id[i] with previous one and next one
 				if (cursor->info.target_mnt_id[i-1] < mnt_id && mnt_id < cursor->info.target_mnt_id[i]) {
+					SUSFS_LOGI("mnt_id: %d is between target_mnt_id[%d]: %d and target_mnt_id[%d]: %d\n", mnt_id, i-1, cursor->info.target_mnt_id[i-1], i, cursor->info.target_mnt_id[i]);
 					return mnt_id - i;
 				}
 				if (cursor->info.target_mnt_id[i] < mnt_id && mnt_id < cursor->info.target_mnt_id[i+1]) {
+					SUSFS_LOGI("mnt_id: %d is between target_mnt_id[%d]: %d and target_mnt_id[%d]: %d\n", mnt_id, i, cursor->info.target_mnt_id[i], i+1, cursor->info.target_mnt_id[i+1]);
 					return mnt_id - (i+1);
 				}
 			}
 		}
 	}
+	SUSFS_LOGI("No matching pid: %d found in LH_MOUNT_ID_RECORDER\n", cur_pid);
 	return mnt_id;
 }
 
