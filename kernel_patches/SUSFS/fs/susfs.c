@@ -31,7 +31,7 @@ spinlock_t susfs_mnt_id_recorder_spin_lock;
 bool is_log_enable = true;
 #ifdef CONFIG_KSU_SUSFS_ENABLE_LOG
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-#define SUSFS_LOGD(fmt, ...) if (is_log_enable) pr_debug("susfs: " fmt, ##__VA_ARGS__)
+#define SUSFS_LOGD(fmt, ...) if (is_log_enable) pr_info("[debug] susfs: " fmt, ##__VA_ARGS__)
 #endif /* CONFIG_KSU_SUSFS_DEBUG */
 #define SUSFS_LOGI(fmt, ...) if (is_log_enable) pr_info("susfs: " fmt, ##__VA_ARGS__)
 #define SUSFS_LOGE(fmt, ...) if (is_log_enable) pr_err("susfs: " fmt, ##__VA_ARGS__)
