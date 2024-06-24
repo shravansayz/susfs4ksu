@@ -1,23 +1,23 @@
-From 933140f8713e6bc53fcd51aae92dad403ed55b22 Mon Sep 17 00:00:00 2001
+From a2c16cb41f76f21b45352dd4c354113c20d14cfe Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Fri, 14 Jun 2024 22:57:11 +0100
-Subject: [PATCH] Enable SUSFS for KSU
+Date: Mon, 24 Jun 2024 13:10:12 +0100
+Subject: [PATCH] enable susfs for ksu
 
 ---
- kernel/Kconfig         |  75 ++++++++++++++++
- kernel/Makefile        |  31 +++++++
+ kernel/Kconfig         |  84 ++++++++++++++++++
+ kernel/Makefile        |  34 ++++++++
  kernel/core_hook.c     | 194 +++++++++++++++++++++++++++++++++++++++++
  kernel/kernel_compat.c |  10 +++
  kernel/kernel_compat.h |   1 +
  kernel/ksu.c           |   8 ++
  kernel/selinux/rules.c |   5 ++
- 7 files changed, 324 insertions(+)
+ 7 files changed, 336 insertions(+)
 
 diff --git a/kernel/Kconfig b/kernel/Kconfig
-index 67f177f4..47f98f36 100644
+index 67f177f4..df26b07d 100644
 --- a/kernel/Kconfig
 +++ b/kernel/Kconfig
-@@ -16,4 +16,79 @@ config KSU_DEBUG
+@@ -16,4 +16,88 @@ config KSU_DEBUG
  	help
  	  Enable KernelSU debug mode.
  
@@ -28,6 +28,15 @@ index 67f177f4..47f98f36 100644
 +	default y
 +	help
 +	  Patch and Enable SUSFS to kernel with KernelSU
++
++config KSU_SUSFS_DEBUG
++	bool "Enable to add debug logging to /dev/kmsg"
++	depends on KSU_SUSFS
++	default n
++	help
++	  It is recommended that you leave this option
++	  disabled unless you are actively debugging
++	  a problem with SUSFS.
 +
 +config KSU_SUSFS_SUS_PATH
 +	bool "Enable to hide suspicious path"
@@ -98,15 +107,18 @@ index 67f177f4..47f98f36 100644
 +
  endmenu
 diff --git a/kernel/Makefile b/kernel/Makefile
-index 9fec3ef3..be858314 100644
+index 9fec3ef3..049f939a 100644
 --- a/kernel/Makefile
 +++ b/kernel/Makefile
-@@ -51,4 +51,35 @@ ccflags-y += -DEXPECTED_HASH=\"$(KSU_EXPECTED_HASH)\"
+@@ -51,4 +51,38 @@ ccflags-y += -DEXPECTED_HASH=\"$(KSU_EXPECTED_HASH)\"
  ccflags-y += -Wno-implicit-function-declaration -Wno-strict-prototypes -Wno-int-conversion -Wno-gcc-compat
  ccflags-y += -Wno-declaration-after-statement -Wno-unused-function
  
 +ifdef KSU_SUSFS
 +ccflags-y += -DKSU_SUSFS
++endif
++ifdef KSU_SUSFS_DEBUG
++ccflags += -KSU_SUSFS_DEBUG
 +endif
 +ifdef KSU_SUSFS_SUS_PATH
 +ccflags-y += -DKSU_SUSFS_SUS_PATH
