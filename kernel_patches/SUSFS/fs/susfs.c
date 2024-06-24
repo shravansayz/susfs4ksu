@@ -495,8 +495,6 @@ int susfs_sus_mount(struct vfsmount* mnt, struct path* root) {
 	};
 	struct st_susfs_sus_mount_list *cursor, *temp;
 
-	//if (!uid_matches_suspicious_mount()) return status;
-
 	path = kmalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
 		SUSFS_LOGE("No enough memory\n");
@@ -579,7 +577,6 @@ int susfs_sus_maps(unsigned long target_ino, unsigned long target_address_size, 
 	struct st_susfs_sus_maps_list *cursor, *temp;
 	struct inode *tmp_inode, *tmp_inode_prev, *tmp_inode_next;
 
-	//if (!uid_matches_suspicious_maps()) return 0;
 	list_for_each_entry_safe(cursor, temp, &LH_MAPS_SPOOFER, list) {
 		// if it is NOT statically
 		if (!cursor->info.is_statically) {
@@ -862,13 +859,6 @@ void susfs_change_error_no_by_pathname(char* const pathname, int* const errno_to
 			case SYSCALL_FAMILY_RENAMEAT2_OLDNAME:
 				*errno_to_be_changed = -EXDEV;
 				return;
-			//case SYSCALL_FAMILY_RENAMEAT2_NEWNAME:
-			//	if (!strncmp(pathname, "/system/", 8)) {
-			//		*errno_to_be_changed = -EROFS;
-			//	} else {
-			//		*errno_to_be_changed = -EXDEV;
-			//	}
-			//	return;
 			default:
 				*errno_to_be_changed = -EROFS;
 				return;
@@ -1116,6 +1106,3 @@ void __init susfs_init(void) {
 	spin_lock_init(&susfs_mnt_id_recorder_spin_lock);
 	susfs_my_uname_init();
 }
-
-/* No module exit is needed becuase it should never be a loadable kernel module */
-//void __init susfs_exit(void)
