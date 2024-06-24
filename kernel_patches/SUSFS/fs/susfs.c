@@ -44,12 +44,13 @@ bool is_log_enable = true;
 #endif /* CONFIG_KSU_SUSFS_ENABLE_LOG */
 
 int susfs_add_sus_path(struct st_susfs_sus_path* __user user_info) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_sus_path: called\n");
-#endif
 	struct st_susfs_sus_path_list *cursor, *temp;
 	struct st_susfs_sus_path_list *new_list = NULL;
 	struct st_susfs_sus_path info;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_add_sus_path: called\n");
+#endif
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_path))) {
 		SUSFS_LOGE("susfs_add_sus_path: failed copying from userspace\n");
@@ -101,14 +102,14 @@ int susfs_add_sus_path(struct st_susfs_sus_path* __user user_info) {
 }
 
 int susfs_add_sus_mount(struct st_susfs_sus_mount* __user user_info) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_sus_mount: called\n");
-#endif
 	struct st_susfs_sus_mount_list *cursor, *temp;
 	struct st_susfs_sus_mount_list *new_list = NULL;
 	struct st_susfs_sus_mount info;
-
 	int list_count = 0;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_add_sus_mount: called\n");
+#endif
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_mount))) {
 		SUSFS_LOGE("susfs_add_sus_mount: failed copying from userspace\n");
@@ -166,12 +167,13 @@ int susfs_add_sus_mount(struct st_susfs_sus_mount* __user user_info) {
 }
 
 int susfs_add_sus_kstat(struct st_susfs_sus_kstat* __user user_info) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_sus_kstat: called\n");
-#endif
 	struct st_susfs_sus_kstat_list *cursor, *temp;
 	struct st_susfs_sus_kstat_list *new_list = NULL;
 	struct st_susfs_sus_kstat info;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_add_sus_kstat: called\n");
+#endif
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_kstat))) {
 		SUSFS_LOGE("susfs_add_sus_kstat: failed copying from userspace\n");
@@ -246,11 +248,12 @@ int susfs_add_sus_kstat(struct st_susfs_sus_kstat* __user user_info) {
 }
 
 int susfs_update_sus_kstat(struct st_susfs_sus_kstat* __user user_info) {
+	struct st_susfs_sus_kstat_list *cursor, *temp;
+	struct st_susfs_sus_kstat info;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_update_sus_kstat: called\n");
 #endif
-	struct st_susfs_sus_kstat_list *cursor, *temp;
-	struct st_susfs_sus_kstat info;
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_kstat))) {
 		SUSFS_LOGE("susfs_update_sus_kstat: failed copying from userspace\n");
@@ -278,12 +281,13 @@ int susfs_update_sus_kstat(struct st_susfs_sus_kstat* __user user_info) {
 }
 
 int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_sus_maps: called\n");
-#endif
 	struct st_susfs_sus_maps_list *cursor, *temp;
 	struct st_susfs_sus_maps_list *new_list = NULL;
 	struct st_susfs_sus_maps info;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_add_sus_maps: called\n");
+#endif
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_maps))) {
 		SUSFS_LOGE("susfs_add_sus_maps: failed copying from userspace\n");
@@ -403,11 +407,12 @@ int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 }
 
 int susfs_update_sus_maps(struct st_susfs_sus_maps* __user user_info) {
+	struct st_susfs_sus_maps_list *cursor, *temp;
+	struct st_susfs_sus_maps info;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_update_sus_maps: called\n");
 #endif
-	struct st_susfs_sus_maps_list *cursor, *temp;
-	struct st_susfs_sus_maps info;
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_maps))) {
 		SUSFS_LOGE("susfs_update_sus_maps: failed copying from userspace\n");
@@ -437,12 +442,13 @@ int susfs_update_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 }
 
 int susfs_add_sus_proc_fd_link(struct st_susfs_sus_proc_fd_link* __user user_info) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_sus_proc_fd_link: called\n");
-#endif
 	struct st_susfs_sus_proc_fd_link_list *cursor, *temp;
 	struct st_susfs_sus_proc_fd_link_list *new_list = NULL;
 	struct st_susfs_sus_proc_fd_link info;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_add_sus_proc_fd_link: called\n");
+#endif
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_sus_proc_fd_link))) {
 		SUSFS_LOGE("susfs_add_sus_proc_fd_link: failed copying from userspace\n");
@@ -495,12 +501,13 @@ int susfs_add_sus_proc_fd_link(struct st_susfs_sus_proc_fd_link* __user user_inf
 }
 
 int susfs_add_try_umount(struct st_susfs_try_umount* __user user_info) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_try_umount: called\n");
-#endif
 	struct st_susfs_try_umount_list *cursor, *temp;
 	struct st_susfs_try_umount_list *new_list = NULL;
 	struct st_susfs_try_umount info;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_add_try_umount: called\n");
+#endif
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_try_umount))) {
 		SUSFS_LOGE("susfs_add_try_umount: failed copying from userspace\n");
@@ -552,10 +559,11 @@ int susfs_add_try_umount(struct st_susfs_try_umount* __user user_info) {
 }
 
 int susfs_set_uname(struct st_susfs_uname* __user user_info) {
+	struct st_susfs_uname info;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_set_uname: called\n");
 #endif
-	struct st_susfs_uname info;
 
 	if (copy_from_user(&info, user_info, sizeof(struct st_susfs_uname))) {
 		SUSFS_LOGE("susfs_set_uname: failed copying from userspace.\n");
@@ -584,15 +592,16 @@ int susfs_set_uname(struct st_susfs_uname* __user user_info) {
 }
 
 int susfs_sus_path_by_path(const struct path* file, int* errno_to_be_changed, int syscall_family) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_sus_path_by_path: called\n");
-#endif
 	int res = 0;
 	int status = 0;
 	char* path = NULL;
 	char* ptr = NULL;
 	char* end = NULL;
 	struct st_susfs_sus_path_list *cursor, *temp;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_sus_path_by_path: called\n");
+#endif
 
 	if (!uid_matches_suspicious_path() || file == NULL) {
 		return status; // status == 0
@@ -641,12 +650,13 @@ out:
 }
 
 int susfs_sus_path_by_filename(struct filename* name, int* errno_to_be_changed, int syscall_family) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_sus_path_by_filename: called\n");
-#endif
 	int status = 0;
 	int ret = 0;
 	struct path path;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_sus_path_by_filename: called\n");
+#endif
 
 	if (IS_ERR(name)) {
 		return status; // status == 0
@@ -671,10 +681,11 @@ int susfs_sus_path_by_filename(struct filename* name, int* errno_to_be_changed, 
 }
 
 int susfs_sus_ino_for_filldir64(unsigned long ino) {
+	struct st_susfs_sus_path_list *cursor, *temp;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_sus_ino_for_filldir64: called\n");
 #endif
-	struct st_susfs_sus_path_list *cursor, *temp;
 
 	if (!uid_matches_suspicious_path()) return 0;
 	list_for_each_entry_safe(cursor, temp, &LH_SUS_PATH, list) {
@@ -692,9 +703,6 @@ int susfs_sus_ino_for_filldir64(unsigned long ino) {
 }
 
 int susfs_sus_mount(struct vfsmount* mnt, struct path* root) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_sus_mount: called\n");
-#endif
 	int res = 0;
 	int status = 0;
 	char* path = NULL;
@@ -705,6 +713,10 @@ int susfs_sus_mount(struct vfsmount* mnt, struct path* root) {
 		.mnt = mnt
 	};
 	struct st_susfs_sus_mount_list *cursor, *temp;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_sus_mount: called\n");
+#endif
 
 	path = kmalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
@@ -751,10 +763,11 @@ void susfs_sus_kstat(unsigned long ino, struct stat64* out_stat) {
 #else
 void susfs_sus_kstat(unsigned long ino, struct stat* out_stat) {
 #endif
+	struct st_susfs_sus_kstat_list *cursor, *temp;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_sus_kstat: called\n");
 #endif
-	struct st_susfs_sus_kstat_list *cursor, *temp;
 
 	if (!uid_matches_suspicious_kstat()) return;
 	list_for_each_entry_safe(cursor, temp, &LH_KSTAT_SPOOFER, list) {
@@ -793,11 +806,12 @@ void susfs_sus_kstat(unsigned long ino, struct stat* out_stat) {
  *  4 -> target_ino is 'zero' or 'non-zero', all entries match with [is_file,target_addr_size,target_prot,target_pgoff,target_dev] will be spoofed with user defined entry
  */
 int susfs_sus_maps(unsigned long target_ino, unsigned long target_address_size, unsigned long* orig_ino, dev_t* orig_dev, vm_flags_t* flags, unsigned long long* pgoff, struct vm_area_struct* vma, char* tmpname) {
+	struct st_susfs_sus_maps_list *cursor, *temp;
+	struct inode *tmp_inode, *tmp_inode_prev, *tmp_inode_next;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_sus_maps: called\n");
 #endif
-	struct st_susfs_sus_maps_list *cursor, *temp;
-	struct inode *tmp_inode, *tmp_inode_prev, *tmp_inode_next;
 
 	list_for_each_entry_safe(cursor, temp, &LH_MAPS_SPOOFER, list) {
 		// if it is NOT statically
@@ -957,10 +971,11 @@ do_spoof:
 }
 
 void susfs_sus_proc_fd_link(char *pathname, int len) {
+	struct st_susfs_sus_proc_fd_link_list *cursor, *temp;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_sus_proc_fd_link: called\n");
 #endif
-	struct st_susfs_sus_proc_fd_link_list *cursor, *temp;
 
 	if (!uid_matches_suspicious_proc_fd_link()) {
 		return;
@@ -984,10 +999,11 @@ void susfs_sus_proc_fd_link(char *pathname, int len) {
 }
 
 static void umount_mnt(struct path *path, int flags) {
+	int err = path_umount(path, flags);
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("umount_mnt: called\n");
 #endif
-	int err = path_umount(path, flags);
 	if (err) {
 		SUSFS_LOGI("umount_mnt: umount %s failed: %d\n", path->dentry->d_iname, err);
 	}
@@ -1025,11 +1041,12 @@ static bool should_umount(struct path *path)
 }
 
 static void try_umount(const char *mnt, bool check_mnt, int flags) {
+	struct path path;
+	int err = kern_path(mnt, 0, &path);
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("try_umount: called\n");
 #endif
-	struct path path;
-	int err = kern_path(mnt, 0, &path);
 
 	if (err) {
 		return;
@@ -1053,10 +1070,11 @@ static void try_umount(const char *mnt, bool check_mnt, int flags) {
 }
 
 void susfs_try_umount(uid_t target_uid) {
+	struct st_susfs_try_umount_list *cursor, *temp;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_try_umount: called\n");
 #endif
-	struct st_susfs_try_umount_list *cursor, *temp;
 
 	list_for_each_entry_safe(cursor, temp, &LH_TRY_UMOUNT_PATH, list) {
 		SUSFS_LOGI("susfs_try_umount: umounting '%s' for uid: %d\n", cursor->info.target_pathname, target_uid);
@@ -1076,6 +1094,7 @@ void susfs_spoof_uname(struct new_utsname* tmp) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_spoof_uname: called\n");
 #endif
+
 	if (strcmp(my_uname.sysname, "default")) {
 		memset(tmp->sysname, 0, __NEW_UTS_LEN);
 		strncpy(tmp->sysname, my_uname.sysname, __NEW_UTS_LEN);
@@ -1106,6 +1125,7 @@ void susfs_set_log(bool enabled) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_set_log: called\n");
 #endif
+
 	spin_lock(&susfs_spin_lock);
 	is_log_enable = enabled;
 	spin_unlock(&susfs_spin_lock);
@@ -1127,6 +1147,7 @@ void susfs_change_error_no_by_pathname(char* const pathname, int* const errno_to
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_change_error_no_by_pathname: called\n");
 #endif
+
 	if (!strncmp(pathname, "/system/", 8)||
 		!strncmp(pathname, "/vendor/", 8)) {
 		switch(syscall_family) {
@@ -1263,9 +1284,6 @@ void susfs_change_error_no_by_pathname(char* const pathname, int* const errno_to
  *   enable umount by ksu, and put all your mounts to add_sus_mount and add_sus_path
  */
 void susfs_add_mnt_id_recorder(void) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_add_mnt_id_recorder: called\n");
-#endif
 	struct st_susfs_mnt_id_recorder_list *new_list = NULL;
 	struct st_susfs_sus_mount_list *sus_mount_cursor;
 
@@ -1363,12 +1381,13 @@ void susfs_add_mnt_id_recorder(void) {
 }
 
 int susfs_get_fake_mnt_id(int mnt_id) {
-#ifdef CONFIG_KSU_SUSFS_DEBUG
-    SUSFS_LOGD("susfs_get_fake_mnt_id: called\n");
-#endif
 	struct st_susfs_mnt_id_recorder_list *cursor;
 	int cur_pid = current->pid;
 	int i;
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+    SUSFS_LOGD("susfs_get_fake_mnt_id: called\n");
+#endif
 
 	SUSFS_LOGI("susfs_get_fake_mnt_id: Starting susfs_get_fake_mnt_id for pid: %d, mnt_id: %d\n", cur_pid, mnt_id);
 
@@ -1416,11 +1435,12 @@ int susfs_get_fake_mnt_id(int mnt_id) {
 }
 
 void susfs_remove_mnt_id_recorder(void) {
+	struct st_susfs_mnt_id_recorder_list *cursor, *temp;
+	int cur_pid = current->pid;
+
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_remove_mnt_id_recorder: called\n");
 #endif
-	struct st_susfs_mnt_id_recorder_list *cursor, *temp;
-	int cur_pid = current->pid;
 
 	spin_lock(&susfs_mnt_id_recorder_spin_lock);
 	list_for_each_entry_safe(cursor, temp, &LH_MOUNT_ID_RECORDER, list) {
@@ -1446,6 +1466,7 @@ static void susfs_my_uname_init(void) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_my_uname_init: called\n");
 #endif
+
 	memset(&my_uname, 0, sizeof(struct st_susfs_uname));
 	strncpy(my_uname.sysname, "default", __NEW_UTS_LEN);
 	strncpy(my_uname.nodename, "default", __NEW_UTS_LEN);
@@ -1462,6 +1483,7 @@ void __init susfs_init(void) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
     SUSFS_LOGD("susfs_init: called\n");
 #endif
+
 	spin_lock_init(&susfs_spin_lock);
 	spin_lock_init(&susfs_mnt_id_recorder_spin_lock);
 	susfs_my_uname_init();
