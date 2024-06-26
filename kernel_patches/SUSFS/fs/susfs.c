@@ -72,9 +72,9 @@ int susfs_add_sus_path(struct st_susfs_sus_path* __user user_info) {
 	SUSFS_LOGD("susfs_add_sus_path: list_for_each_entry_safe completed\n");
 #endif
 
-	new_list = kmalloc(sizeof(struct st_susfs_sus_path_list), GFP_KERNEL);
+	new_list = kzalloc(sizeof(struct st_susfs_sus_path_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("susfs_add_sus_path: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_add_sus_path: kzalloc() failed\n");
 		return 1;
 	}
 
@@ -137,9 +137,9 @@ int susfs_add_sus_mount(struct st_susfs_sus_mount* __user user_info) {
 		return 1;
 	}
 
-	new_list = kmalloc(sizeof(struct st_susfs_sus_mount_list), GFP_KERNEL);
+	new_list = kzalloc(sizeof(struct st_susfs_sus_mount_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("susfs_add_sus_mount: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_add_sus_mount: kzalloc() failed\n");
 		return 1;
 	}
 
@@ -199,9 +199,9 @@ int susfs_add_sus_kstat(struct st_susfs_sus_kstat* __user user_info) {
 	SUSFS_LOGD("susfs_add_sus_kstat: list_for_each_entry_safe completed\n");
 #endif
 
-	new_list = kmalloc(sizeof(struct st_susfs_sus_kstat_list), GFP_KERNEL);
+	new_list = kzalloc(sizeof(struct st_susfs_sus_kstat_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("susfs_add_sus_kstat: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_add_sus_kstat: kzalloc() failed\n");
 		return 1;
 	}
 
@@ -361,9 +361,9 @@ int susfs_add_sus_maps(struct st_susfs_sus_maps* __user user_info) {
 	SUSFS_LOGD("susfs_add_sus_maps: list_for_each_entry_safe completed\n");
 #endif
 
-	new_list = kmalloc(sizeof(struct st_susfs_sus_maps_list), GFP_KERNEL);
+	new_list = kzalloc(sizeof(struct st_susfs_sus_maps_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("susfs_add_sus_maps: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_add_sus_maps: kzalloc() failed\n");
 		return 1;
 	}
 
@@ -470,9 +470,9 @@ int susfs_add_sus_proc_fd_link(struct st_susfs_sus_proc_fd_link* __user user_inf
 	SUSFS_LOGD("susfs_add_sus_proc_fd_link: list_for_each_entry_safe completed\n");
 #endif
 
-	new_list = kmalloc(sizeof(struct st_susfs_sus_proc_fd_link_list), GFP_KERNEL);
+	new_list = kzalloc(sizeof(struct st_susfs_sus_proc_fd_link_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("susfs_add_sus_proc_fd_link: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_add_sus_proc_fd_link: kzalloc() failed\n");
 		return 1;
 	}
 
@@ -529,9 +529,9 @@ int susfs_add_try_umount(struct st_susfs_try_umount* __user user_info) {
 	SUSFS_LOGD("susfs_add_try_umount: list_for_each_entry_safe completed\n");
 #endif
 
-	new_list = kmalloc(sizeof(struct st_susfs_try_umount_list), GFP_KERNEL);
+	new_list = kzalloc(sizeof(struct st_susfs_try_umount_list), GFP_KERNEL);
 	if (!new_list) {
-		SUSFS_LOGE("susfs_add_try_umount: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_add_try_umount: kzalloc() failed\n");
 		return 1;
 	}
 
@@ -607,9 +607,9 @@ int susfs_sus_path_by_path(const struct path* file, int* errno_to_be_changed, in
 		return status; // status == 0
 	}
 
-	path = kmalloc(PATH_MAX, GFP_KERNEL);
+	path = kzalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
-		SUSFS_LOGE("susfs_sus_path_by_path: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_sus_path_by_path: kzalloc() failed\n");
 		return status; // status == 0
 	}
 
@@ -718,9 +718,9 @@ int susfs_sus_mount(struct vfsmount* mnt, struct path* root) {
 	SUSFS_LOGD("susfs_sus_mount: called\n");
 #endif
 
-	path = kmalloc(PATH_MAX, GFP_KERNEL);
+	path = kzalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
-		SUSFS_LOGE("susfs_sus_mount: kmalloc() failed\n");
+		SUSFS_LOGE("susfs_sus_mount: kzalloc() failed\n");
 		return status; // status == 0
 	}
 
@@ -1306,19 +1306,26 @@ void susfs_add_mnt_id_recorder(void) {
 	new_list = kzalloc(sizeof(struct st_susfs_mnt_id_recorder_list), GFP_KERNEL);
 	if (!new_list) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-		SUSFS_LOGD("susfs_add_mnt_id_recorder: kmalloc() failed for new_list\n");
+		SUSFS_LOGD("susfs_add_mnt_id_recorder: kzalloc() failed for new_list\n");
 #endif
 		return;
 	}
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+		SUSFS_LOGD("susfs_add_mnt_id_recorder: kzalloc() succeeded for new_list\n");
+#endif
 
-	path = kmalloc(PATH_MAX, GFP_KERNEL);
+	path = kzalloc(PATH_MAX, GFP_KERNEL);
 	if (path == NULL) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-		SUSFS_LOGD("susfs_add_mnt_id_recorder: kmalloc() failed for path\n");
+		SUSFS_LOGD("susfs_add_mnt_id_recorder: kzalloc() failed for path\n");
 #endif
 		kfree(new_list);
 		return;
 	}
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+		SUSFS_LOGD("susfs_add_mnt_id_recorder: kzalloc() succeeded for path\n");
+#endif
 
 	new_list->info.pid = cur_pid;
 
@@ -1328,6 +1335,10 @@ void susfs_add_mnt_id_recorder(void) {
 			SUSFS_LOGD("susfs_add_mnt_id_recorder: mnt is NULL\n");
 #endif
 			continue;
+		} else {
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+			SUSFS_LOGD("susfs_add_mnt_id_recorder: mnt is not NULL\n");
+#endif
 		}
 
 		mnt_path.dentry = mnt->mnt.mnt_root;
@@ -1338,6 +1349,10 @@ void susfs_add_mnt_id_recorder(void) {
 			SUSFS_LOGD("susfs_add_mnt_id_recorder: d_path() failed\n");
 #endif
 			continue;
+		} else {
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+			SUSFS_LOGD("susfs_add_mnt_id_recorder: d_path() succeeded\n");
+#endif
 		}
 		end = mangle_path(path, p_path, " \t\n\\");
 		if (!end) {
@@ -1345,6 +1360,10 @@ void susfs_add_mnt_id_recorder(void) {
 			SUSFS_LOGD("susfs_add_mnt_id_recorder: mangle_path() failed\n");
 #endif
 			continue;
+		} else {
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+			SUSFS_LOGD("susfs_add_mnt_id_recorder: mangle_path() succeeded\n");
+#endif
 		}
 		res = end - path;
 		path[(size_t) res] = '\0';
@@ -1361,6 +1380,9 @@ void susfs_add_mnt_id_recorder(void) {
 	}
 
 	kfree(path);
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+		SUSFS_LOGD("susfs_add_mnt_id_recorder: kfree(path) completed\n");
+#endif
 	if (new_list->info.count == 0) {
 		kfree(new_list);
 #ifdef CONFIG_KSU_SUSFS_DEBUG
@@ -1370,6 +1392,11 @@ void susfs_add_mnt_id_recorder(void) {
 	}
 
 	INIT_LIST_HEAD(&new_list->list);
+
+#ifdef CONFIG_KSU_SUSFS_DEBUG
+		SUSFS_LOGD("susfs_add_mnt_id_recorder: new_list->info.count = %d\n", new_list->info.count);
+#endif
+
 	spin_lock(&susfs_mnt_id_recorder_spin_lock);
 	list_add_tail(&new_list->list, &LH_MOUNT_ID_RECORDER);
 	spin_unlock(&susfs_mnt_id_recorder_spin_lock);
@@ -1398,27 +1425,27 @@ int susfs_get_fake_mnt_id(int mnt_id) {
 				// if comparing with first target_mnt_id and mnt_id is before any target_mnt_id
 				if (i == 0 && mnt_id < cursor->info.target_mnt_id[i]) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-					SUSFS_LOGD("mnt_id: %d is before first target_mnt_id: %d\n", mnt_id, cursor->info.target_mnt_id[i]);
+					SUSFS_LOGD("susfs_get_fake_mnt_id: mnt_id %d is before first target_mnt_id: %d\n", mnt_id, cursor->info.target_mnt_id[i]);
 #endif
 					return mnt_id;
 				}
 				// if comparing with last target_mnt_id and mnt_id is after the last target_mnt_id
 				if (i+1 == cursor->info.count && cursor->info.target_mnt_id[i] < mnt_id) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-					SUSFS_LOGD("mnt_id: %d is after last target_mnt_id: %d\n", mnt_id, cursor->info.target_mnt_id[i]);
+					SUSFS_LOGD("susfs_get_fake_mnt_id: mnt_id %d is after last target_mnt_id: %d\n", mnt_id, cursor->info.target_mnt_id[i]);
 #endif
 					return mnt_id - cursor->info.count;
 				}
 				// else comparing the target_mnt_id[i] with previous one and next one
 				if (cursor->info.target_mnt_id[i-1] < mnt_id && mnt_id < cursor->info.target_mnt_id[i]) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-					SUSFS_LOGD("mnt_id: %d is between target_mnt_id[%d]: %d and target_mnt_id[%d]: %d\n", mnt_id, i-1, cursor->info.target_mnt_id[i-1], i, cursor->info.target_mnt_id[i]);
+					SUSFS_LOGD("susfs_get_fake_mnt_id: mnt_id %d is between target_mnt_id[%d]: %d and target_mnt_id[%d]: %d\n", mnt_id, i-1, cursor->info.target_mnt_id[i-1], i, cursor->info.target_mnt_id[i]);
 #endif
 					return mnt_id - i;
 				}
 				if (cursor->info.target_mnt_id[i] < mnt_id && mnt_id < cursor->info.target_mnt_id[i+1]) {
 #ifdef CONFIG_KSU_SUSFS_DEBUG
-					SUSFS_LOGD("mnt_id: %d is between target_mnt_id[%d]: %d and target_mnt_id[%d]: %d\n", mnt_id, i, cursor->info.target_mnt_id[i], i+1, cursor->info.target_mnt_id[i+1]);
+					SUSFS_LOGD("susfs_get_fake_mnt_id: mnt_id %d is between target_mnt_id[%d]: %d and target_mnt_id[%d]: %d\n", mnt_id, i, cursor->info.target_mnt_id[i], i+1, cursor->info.target_mnt_id[i+1]);
 #endif
 					return mnt_id - (i+1);
 				}
