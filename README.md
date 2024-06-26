@@ -11,12 +11,12 @@ The susfs kernel patches may differ for different kernel version. You may need t
 
 ## Patch Instruction ##
 1. Run `cp ./kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch $KERNEL_ROOT/KernelSU/`
-2. Run `cp ./kernel_patches/<kernel_version>/50_add_susfs_in_kernel.patch $KERNEL_ROOT/`
-3. Run `cp ./kernel_patches/<kernel_version>/fs/susfs.c $KERNEL_ROOT/fs/`
-4. Run `cp ./kernel_patches/<kernel_version>/include/linux/susfs.h $KERNEL_ROOT/include/linux/`
+2. Run `cp ./kernel_patches/SUSFS/fs/susfs.c $KERNEL_ROOT/fs/`
+3. Run `cp ./kernel_patches/SUSFS/include/linux/susfs.h $KERNEL_ROOT/include/linux/`
+4. Run `cp ./kernel_patches/<kernel_version>/50_add_susfs_in_kernel.patch $KERNEL_ROOT/`
 5. Run `cd $KERNEL_ROOT/KernelSU` and then `patch -p1 < 10_enable_susfs_for_ksu.patch`
 6. Run `cd $KERNEL_ROOT` and then `patch -p1 < 50_add_susfs_in_kernel.patch`, **if there are failed patches, please find your own proper defined syscall functions and patch them yourself.**
-7. Make sure again to have `CONFIG_KSU` and `CONFIG_KSU_SUSFS` enabled before building the kernel.
+7. Make sure again to have `CONFIG_KSU`, `CONFIG_KSU_SUSFS` and any other KSU_SUSFS options you wish to be enabled before building the kernel.
 8. Build and flash the kernel.
 
 ## Build ksu_susfs userspace tool ##
